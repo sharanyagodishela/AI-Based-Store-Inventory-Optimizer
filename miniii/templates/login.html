@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Store Optimizer Login</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+.error { color: red; font-size: 14px; }
+</style>
+
+</head>
+
+<body class="login-body">
+
+<div class="login-container">
+
+<h2>Store Optimizer Login</h2>
+
+<!-- FLASH MESSAGES -->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div style="background:#d4edda; color:#155724; padding:10px; border:1px solid #c3e6cb; margin-bottom:15px;">
+{% for message in messages %}
+<p>{{ message }}</p>
+{% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<form action="{{ url_for('login') }}" method="POST" onsubmit="return validateForm()">
+
+<!-- Username or Email -->
+<div class="form-group">
+<label>Username or Email</label>
+<input type="text" name="username" id="username" placeholder="Enter Username or Email" required>
+</div>
+
+<!-- Password -->
+<div class="form-group">
+<label>Password</label>
+<input type="password" name="password" id="password" placeholder="Enter Password" required>
+</div>
+
+<!-- Show Password -->
+<div class="form-group">
+<input type="checkbox" onclick="togglePassword()"> Show Password
+</div>
+
+<!-- Remember Me -->
+<div class="form-group">
+<input type="checkbox" name="remember"> Remember Me
+</div>
+
+<!-- Error Message -->
+<div id="error-message" class="error"></div>
+
+<br>
+
+<button type="submit" class="login-btn">Login</button>
+
+</form>
+
+<br>
+
+<!-- Extra Links -->
+<div style="text-align:center;">
+<a href="#">Forgot Password?</a>
+<br><br>
+<p>Don't have an account?</p>
+<a href="{{ url_for('register') }}">Create Account</a>
+</div>
+
+</div>
+
+<script>
+
+// Toggle Password
+function togglePassword() {
+    let pass = document.getElementById("password");
+    pass.type = pass.type === "password" ? "text" : "password";
+}
+
+// Validation
+function validateForm() {
+    let user = document.getElementById("username").value.trim();
+    let pass = document.getElementById("password").value;
+    let error = document.getElementById("error-message");
+
+    error.innerText = "";
+
+    // Username/Email validation
+    if (user.length < 3) {
+        error.innerText = "Enter valid username or email";
+        return false;
+    }
+
+    // Password validation
+    if (pass.length < 6) {
+        error.innerText = "Password must be at least 6 characters";
+        return false;
+    }
+
+    return true;
+}
+
+</script>
+
+</body>
+</html>

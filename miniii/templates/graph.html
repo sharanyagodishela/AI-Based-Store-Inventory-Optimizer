@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Sales Forecast Graphs</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f6f9;
+    margin:0;
+    padding:0;
+    text-align:center;
+}
+
+h2{
+    margin-top:25px;
+    color:#2c3e50;
+}
+
+/* GRID FOR SIDE-BY-SIDE GRAPHS */
+.graph-container{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:25px;
+    width:90%;
+    margin:auto;
+    margin-top:30px;
+}
+
+/* GRAPH CARD */
+.graph-box{
+    background:white;
+    padding:20px;
+    border-radius:8px;
+    box-shadow:0px 3px 10px rgba(0,0,0,0.15);
+}
+
+.graph-box h3{
+    margin-bottom:10px;
+}
+
+.graph-box img{
+    width:100%;
+}
+
+/* PREDICTION BOX */
+.prediction{
+    font-size:20px;
+    color:#27ae60;
+    margin-top:15px;
+}
+
+/* BUTTON */
+.btn{
+    display:inline-block;
+    margin-top:35px;
+    padding:12px 25px;
+    background:#3498db;
+    color:white;
+    text-decoration:none;
+    border-radius:6px;
+    font-size:16px;
+}
+
+.btn:hover{
+    background:#2980b9;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Sales Forecast Analysis Dashboard</h2>
+
+<div class="graph-container">
+
+<div class="graph-box">
+<h3>Product Sales</h3>
+<img src="{{ url_for('static', filename='graph1.png') }}">
+</div>
+
+<div class="graph-box">
+<h3>Product Stock Levels</h3>
+<img src="{{ url_for('static', filename='graph2.png') }}">
+</div>
+
+<div class="graph-box">
+<h3>Actual vs Predicted Sales</h3>
+<img src="{{ url_for('static', filename='graph3.png') }}">
+</div>
+
+<div class="graph-box">
+<h3>Next Predicted Sales</h3>
+<p class="prediction">{{ predicted }}</p>
+</div>
+
+</div>
+
+<a href="{{ url_for('dashboard') }}" class="btn">Back to Dashboard</a>
+
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Store Dashboard</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+    /* Top buttons */
+    .top-buttons a button {
+        cursor: pointer;
+        padding: 8px 15px;
+        margin: 5px;
+        border-radius: 4px;
+        border: none;
+        background-color: #4CAF50;
+        color: white;
+    }
+    .top-buttons a button:hover {
+        background-color: #45a049;
+    }
+
+    /* Table styling */
+    table {
+        width: 90%;
+        margin: auto;
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+    tbody tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    tbody tr:nth-child(odd) {
+        background-color: #ffffff;
+    }
+    tbody tr:hover {
+        background-color: #ffeb99;
+        cursor: pointer;
+    }
+
+    /* Alerts & top products */
+    .alert, .recommendation, .top-selling {
+        width: 70%;
+        margin: auto;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    .alert { background: #ffdddd; border: 1px solid red; }
+    .recommendation { background: #fff3cd; border: 1px solid orange; }
+    .top-selling { background: #ddffdd; border: 1px solid green; }
+
+    /* Logout button at bottom */
+    .logout-bottom {
+        display: block;
+        margin: 40px auto;
+        padding: 10px 20px;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .logout-bottom:hover {
+        background-color: #d32f2f;
+    }
+
+    /* Dashboard heading */
+    h1 {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>Store Dashboard</h1>
+
+<!-- TOTAL STORE STATISTICS -->
+<div style="text-align:center; margin-bottom:20px;">
+    <div style="display:inline-block; padding:10px 20px; background:#e6f7ff; border:1px solid #00aaff; margin:5px;">
+        <strong>Total Products:</strong> {{ total_products }}
+    </div>
+    <div style="display:inline-block; padding:10px 20px; background:#fff0f6; border:1px solid #ff4d6d; margin:5px;">
+        <strong>Total Stock:</strong> {{ total_stock }}
+    </div>
+    <div style="display:inline-block; padding:10px 20px; background:#f9f0ff; border:1px solid #722ed1; margin:5px;">
+        <strong>Total Sales:</strong> {{ total_sales }}
+    </div>
+</div>
+
+<!-- DASHBOARD ACTION BUTTONS -->
+<div class="top-buttons" style="text-align:center; margin-bottom:20px;">
+    <a href="{{ url_for('add_product') }}"><button>Add Product</button></a>
+    <a href="{{ url_for('search') }}"><button>Search Product</button></a>
+    <a href="{{ url_for('graph') }}"><button>View Sales Graph</button></a>
+</div>
+
+<!-- LOW STOCK ALERT -->
+{% if low_stock %}
+<div class="alert">
+    <h3>⚠ Low Stock Alert</h3>
+    <ul>
+        {% for product in low_stock %}
+        <li>{{ product.name }} stock is only {{ product.stock }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<!-- RESTOCK RECOMMENDATION -->
+{% if restock %}
+<div class="recommendation">
+    <h3>📦 Restock Recommendation</h3>
+    <ul>
+        {% for product in restock %}
+        <li>{{ product.name }} has high demand. Consider restocking.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<!-- TOP SELLING PRODUCTS -->
+{% if top_products %}
+<div class="top-selling">
+    <h3>🔥 Top Selling Products</h3>
+    <ol>
+        {% for product in top_products %}
+        <li>{{ product.name }} (Sales: {{ product.sales }})</li>
+        {% endfor %}
+    </ol>
+</div>
+{% endif %}
+
+<h2 style="text-align:center;">Products</h2>
+
+<table>
+<tr style="background:#f2f2f2;">
+    <th>ID</th>
+    <th>Name</th>
+    <th>Stock</th>
+    <th>Status</th>
+    <th>Price</th>
+    <th>Sales</th>
+    <th>Predicted Sales 📈</th>
+    <th>Action</th>
+</tr>
+
+{% for product in products %}
+<tr>
+    <td>{{ product.id }}</td>
+    <td>{{ product.name }}</td>
+    <td>{{ product.stock }}</td>
+    <td>
+        {% if product.stock < 10 %} 🔴 Low Stock
+        {% else %} 🟢 In Stock
+        {% endif %}
+    </td>
+    <td>₹{{ product.price }}</td>
+    <td>{{ product.sales }}</td>
+    <td>
+        {% if predicted_sales %}
+            {{ predicted_sales[product.id] }}
+        {% else %}
+            N/A
+        {% endif %}
+    </td>
+    <td>
+        <a href="{{ url_for('edit_product', id=product.id) }}"><button>Edit</button></a>
+        <form action="{{ url_for('delete_product', id=product.id) }}" method="POST" style="display:inline;">
+            <button type="submit">Delete</button>
+        </form>
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+<!-- LOGOUT BUTTON AT THE BOTTOM -->
+<a href="{{ url_for('logout') }}">
+    <button class="logout-bottom">Logout</button>
+</a>
+
+</body>
+</html>
